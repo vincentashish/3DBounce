@@ -6,13 +6,13 @@ public class Player_movement : MonoBehaviour
     public Rigidbody rb;     
     public float forwardForce = 2000f;
     public float sidewayForce = 30f;
-    public float upForce = 50f;
+    public float upForce = 1000f;
     public bool isKeyD = false;
     public bool isKeyA = false;
     public bool isKeyW = false;
     public bool isKeyS = false;
     public bool isKeySpace = false;
-
+    public int counter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,11 +35,11 @@ public class Player_movement : MonoBehaviour
             isKeyW = true;
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             isKeyS = true;
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             isKeySpace = true;
         }
-            
+        
 
     }
 
@@ -54,11 +54,24 @@ public class Player_movement : MonoBehaviour
             rb.AddForce(0, 0, sidewayForce * Time.deltaTime, ForceMode.VelocityChange);
         if (isKeyS)
             rb.AddForce(0, 0, -sidewayForce * Time.deltaTime, ForceMode.VelocityChange);
+        
         if (isKeySpace)
         {
-            rb.AddForce(0, upForce * Time.deltaTime, 0, ForceMode.VelocityChange);
+            counter++;
+            if(counter <= 2)
+            {
+                rb.AddForce(0, upForce * Time.deltaTime, 0, ForceMode.VelocityChange);
+            }
+
         }
             
     }
 
+    public void OnCollisionEnter(Collision collisionInfo)
+    {
+        if(collisionInfo.collider.tag == "Ground")
+        {
+            counter = 0;
+        }
+    }
 }
